@@ -10,6 +10,8 @@ urlpatterns = [
     
     path('',BaseHome.as_view(),name='home'),
     path('home/',BaseHome.as_view(),name='home'),
+    path('aboutus/',BaseAboutus.as_view(),name='aboutus'),
+    path('help/',BaseHelp.as_view(),name='help'),
 
 
 ]

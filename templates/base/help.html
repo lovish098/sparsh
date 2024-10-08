@@ -1,0 +1,238 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/help.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Arizonia&family=Crimson+Text&display=swap" rel="stylesheet">
+    <title>Help</title>
+</head>
+<body>
+     <!-- It includes only Head part -->
+     <section class="home" id="home">
+        <header class="header">
+            <div class="head-text">
+                <h1 class="name">SPARSH </h1>
+                <p class="slogan"> स्वास्थ्य की ओर पहला कदम, हर अपॉइंटमेंट एक स्पर्श           
+             </p>
+            </div>
+            
+            <div class="icons">
+               <a href="#"></a> <i class="fa-brands fa-facebook-f"></i>
+               <a href="#"></a> <i class="fa-brands fa-instagram"></i>
+               <a href="#"></a> <i class="fa-brands fa-twitter"></i>
+                <a class="skip-content">&ensp;Skip Content</a>
+            </div>
+        
+        </header>
+      </section>
+    
+        
+       
+    
+     <!-- It includes the navbar -->
+        <nav class="navbar">
+            <ul>
+                <li><a href="{% url 'home' %}">Home</a></li> <!-- Home without dropdown -->
+                
+                <li class="dropdown"> 
+                    <a href="#">About Us</a>
+                    <ul class="dropdown-content">
+                        <li><a href="{% url 'aboutus' %}"> <i class="fa-solid fa-eye"></i>&ensp;About Sparsh</a></li>
+                        <li><a href="{% url 'help' %}"><i class="fa-solid fa-circle-question"></i></i>&ensp;Help</a></li>
+                    </ul>
+                </li>
+                
+                <li class="dropdown">
+                    <a href="#">Services</a>
+                    <ul class="dropdown-content">
+                        <li><a href="#"><i class="fa-solid fa-calendar-day"></i>&ensp;Book Appointment</a></li>
+                        <li><a href="#"><i class="fa-solid fa-download"></i>&ensp;Download Appointment</a></li>
+                        <li><a href="#"><i class="fa-solid fa-location-dot"></i>&ensp;Locate Appointment</a></li>
+                        <li><a href="#"><i class="fa-solid fa-print"></i>&ensp;Printig Machine</a></li>
+                    </ul>
+                </li>
+                
+                <li class="dropdown">
+                    <a href="#">Profiles</a>
+                    <ul class="dropdown-content">
+                        <li><a href="#"><i class="fa-solid fa-users-line"></i>&ensp;User Login</a></li>
+                        <li><a href="#"><i class="fa-solid fa-user-doctor"></i>&ensp;Doctor Login</a></li>
+                        <li><a href="#"><i class="fa-solid fa-globe"></i>&ensp;Regional/Area Login</a></li>
+                    </ul>
+                </li>
+                
+                <li class="dropdown">
+                    <a href="#">Verification</a>
+                    <ul class="dropdown-content">
+                        <li><a href="#"><i class="fa-regular fa-circle-check"></i>&ensp;Verify Aadhar Number </a></li>
+                        <li><a href="#"><i class="fa-regular fa-circle-check"></i>&ensp;Verify Phone Number/Email Address</a></li>
+                        <li><a href="#"><i class="fa-regular fa-circle-check"></i>&ensp;Change Phone Number/Email Address</a></li>
+                    </ul>
+                </li>
+                
+                <li class="dropdown">
+                    <a href="#">Download</a>
+                    <ul class="dropdown-content">
+                        <li><a href="#"><i class="fa-solid fa-download"></i>&ensp;Print Application</a></li>
+                        <li><a href="#"><i class="fa-solid fa-download"></i>&ensp;Print Payment Receipt</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#">Contact Us</a>
+                    <ul class="dropdown-content">
+                        <li><a href="#"><i class="fa-solid fa-envelope"></i>&ensp;abcd@gmail.com</a></li>
+                        <li><a href="#"><i class="fa-solid fa-phone"></i>&ensp;0123456789</a></li>
+                    </ul>
+                </li>
+            
+            </ul>
+        </nav>
+
+<!-- It includes the help heading -->
+
+<div class="help">
+    <div class="line"></div>
+      <h1 class="help-txt">Help</h1>
+    <div class="line"></div>
+</div>
+
+   <!-- it is the div of our values -->
+
+   <div class="quick-answers">
+    <h2 class="heading1">Quick Answers</h2>
+    <p class="p1">Got a Quick Question? Start here!</p>
+   <ul class="answers">
+    
+    <li class="list-head" > 
+        Account Management</li>
+        <ul class="underlist">
+<li>
+    How do I reset my password?
+</li>
+<li>
+        How can I update my email address?
+</li>
+        </ul>
+        
+        
+    
+    <li class="list-head">
+        Billing & Subscriptions
+    </li>
+        <ul class="underlist">
+            <li>
+                What payment methods do you accept?
+
+            </li>
+           
+            <li>
+                How do I cancel my subscription?
+            </li>
+        </ul>
+   
+    <li class="list-head">
+        Product Usage
+    </li>
+       <ul class="underlist">
+        <li>
+            How do I get started with [Product Name]?
+
+        </li>
+        <li>
+            What should I do if I encounter an error?
+        </li>
+       </ul>
+    
+   </ul>
+ </div>
+
+
+                  <!-- it is the div of contact us -->
+
+                  <div class="contact-us">
+                    <h2 class="heading2">Contact us</h2>
+                    <p class="p2">Still have questions? We're here to help!
+                    </p>
+                   <ul class="points">
+                    <li> 
+                        Email Support: support@example.com
+                    </li>
+                    <li>
+                        Live Chat: Available Monday - Friday, 9 AM - 5PM
+        
+                    </li>
+                    <li>
+                        Phone Support: 1-800-123-4567 (available during support hours)
+                    </li>
+                   </ul>
+                 </div>
+        
+
+                 <!-- it is the div of feedback -->
+
+                 <div class="feedback">
+                    <h2 class="heading3">feedback</h2>
+                    <p class="p3"> We value your input!</p>
+                    
+                   <ul class="feedback-points">
+                    <li>
+                        Have suggestions or need something specific?
+        
+                    </li>
+                    <li>
+                        Let us know how we can improve our Help Center! Feedback Form
+                    </li>
+                   </ul>
+                 </div>
+
+
+                   <!-- it includes the thank you text and under text of thank you -->
+
+        <div class="thank">
+            
+            <h1 class="thank-txt">Thank You</h1>
+          
+  </div>
+
+  <div class="container-last">
+      <p class="paragraph-last">
+          
+          For Being A Part Of Our Journey. We Invite You To Explore Our SPARSH And Connect With Us. Together, Let's Make A Difference!
+      </p>
+ </div>
+
+
+ <div class="line-with-dots"></div>
+
+
+ <!-- It includes the footer part -->
+
+ <footer class="footer-container">
+    <div class="left-section">
+        <ul>
+            <li>Privacy Policy</li>
+            <li>Non-Discrimination Policy</li>
+            <li>Terms of Use</li>
+            <li>Patient Rights and Responsibilities</li>
+        </ul>
+    </div>
+    <div class="center-section">
+        <p><span>Contact no :</span> 1234567890</p>
+        <p><span>Email id :</span> aabcdef@gmail.com</p>
+        <p><span>Address :</span> abcdefghijkl,mnopq</p>
+    </div>
+    <div class="right-section">
+        <p>Follow Us On</p>
+        <div class="footer-social-icons">
+            <a href="#"></a> <i class="fa-brands fa-facebook-f"></i>
+            <a href="#"></a> <i class="fa-brands fa-instagram"></i>
+            <a href="#"></a> <i class="fa-brands fa-twitter"></i>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>

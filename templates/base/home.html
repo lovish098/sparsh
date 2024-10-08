@@ -1,1 +1,206 @@
-<h1>home page</h1>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/Styles.css' %}"> 
+    <link href="https://fonts.googleapis.com/css2?family=Arizonia&family=Crimson+Text&display=swap" rel="stylesheet">
+    <title>Sparsh</title>
+</head>
+<body>
+ <!-- It includes only Head part -->
+  <section class="home" id="home">
+    <header class="header">
+        <div class="head-text">
+            <h1 class="name">SPARSH </h1>
+            <p class="slogan"> स्वास्थ्य की ओर पहला कदम, हर अपॉइंटमेंट एक स्पर्श           
+         </p>
+        </div>
+        
+        <div class="icons">
+           <a href="#"></a> <i class="fa-brands fa-facebook-f"></i>
+           <a href="#"></a> <i class="fa-brands fa-instagram"></i>
+           <a href="#"></a> <i class="fa-brands fa-twitter"></i>
+            <a class="skip-content">&ensp;Skip Content</a>
+        </div>
+    
+    </header>
+  </section>
+
+    
+   
+
+ <!-- It includes the navbar -->
+    <nav class="navbar">
+        <ul>
+            <li><a href="{% url 'home' %}">Home</a></li> <!-- Home without dropdown -->
+            
+            <li class="dropdown"> 
+                <a href="#">About Us</a>
+                <ul class="dropdown-content">
+                    <li><a href="{% url 'aboutus' %}"> <i class="fa-solid fa-eye"></i>&ensp;About Sparsh</a></li>
+                    <li><a href="{% url 'help' %}"><i class="fa-solid fa-circle-question"></i></i>&ensp;Help</a></li>
+                </ul>
+            </li>
+            
+            <li class="dropdown">
+                <a href="#">Services</a>
+                <ul class="dropdown-content">
+                    <li><a href="#"><i class="fa-solid fa-calendar-day"></i>&ensp;Book Appointment</a></li>
+                    <li><a href="#"><i class="fa-solid fa-download"></i>&ensp;Download Appointment</a></li>
+                    <li><a href="#"><i class="fa-solid fa-location-dot"></i>&ensp;Locate Appointment</a></li>
+                    <li><a href="#"><i class="fa-solid fa-print"></i>&ensp;Printig Machine</a></li>
+                </ul>
+            </li>
+            
+            <li class="dropdown">
+                <a href="#">Profiles</a>
+                <ul class="dropdown-content">
+                    <li><a href="#"><i class="fa-solid fa-users-line"></i>&ensp;User Login</a></li>
+                    <li><a href="#"><i class="fa-solid fa-user-doctor"></i>&ensp;Doctor Login</a></li>
+                    <li><a href="#"><i class="fa-solid fa-globe"></i>&ensp;Regional/Area Login</a></li>
+                </ul>
+            </li>
+            
+            <li class="dropdown">
+                <a href="#">Verification</a>
+                <ul class="dropdown-content">
+                    <li><a href="#"><i class="fa-regular fa-circle-check"></i>&ensp;Verify Aadhar Number </a></li>
+                    <li><a href="#"><i class="fa-regular fa-circle-check"></i>&ensp;Verify Phone Number/Email Address</a></li>
+                    <li><a href="#"><i class="fa-regular fa-circle-check"></i>&ensp;Change Phone Number/Email Address</a></li>
+                </ul>
+            </li>
+            
+            <li class="dropdown">
+                <a href="#">Download</a>
+                <ul class="dropdown-content">
+                    <li><a href="#"><i class="fa-solid fa-download"></i>&ensp;Print Application</a></li>
+                    <li><a href="#"><i class="fa-solid fa-download"></i>&ensp;Print Payment Receipt</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#">Contact Us</a>
+                <ul class="dropdown-content">
+                    <li><a href="#"><i class="fa-solid fa-envelope"></i>&ensp;abcd@gmail.com</a></li>
+                    <li><a href="#"><i class="fa-solid fa-phone"></i>&ensp;0123456789</a></li>
+                </ul>
+            </li>
+        
+        </ul>
+    </nav>
+
+ <!-- It includes the image slider -->
+
+    <div class="container">
+        <div class="slides">
+        <!-- Image 1 -->
+        <div class="slide">
+            <img class="slide-img"  src="{% static 'img/stethoscope.jpg' %}" alt="Image 1">
+        </div>
+        <!-- Image 2 -->
+        <div class="slide">
+            <img class="slide-img" src="{% static 'img/happy-patients.jpg' %}" alt="Image 2">
+        </div>
+        <!-- Image 3 -->
+        <div class="slide">
+            <img class="slide-img"  src="{% static 'img/doctor.jpg' %}" alt="Image 3">
+        </div>
+        <!-- Image 4 -->
+        <div class="slide">
+            <img class="slide-img"  src="{% static 'img/drip.jpg' %}" alt="Image 4">
+        </div>
+        <!-- Image 5 -->
+        <div class="slide">
+            <img class="slide-img"  src="{% static 'img/medicine.jpg' %}" alt="Image 5">
+        </div>
+        </div>
+    </div>
+
+  <div class="welcome">
+    <div class="line"></div>
+    <h1 class="wlcm-txt">Welcome To Sparsh</h1>
+    <div class="line"></div>
+   </div>
+
+
+    <!-- Paragraph with Floating Images Section -->
+    <div class="content-container">
+        <!-- Paragraph Section -->
+        <div class="paragraph-container">
+            <p>
+                A Doctor Is A Person Who Helps To Keep Human Health In Healthy Condition. Doctors Help Patients To Get Relief From Their Pain. 
+                Doctors Play A Very Essential Role In Human Life. We Can Say Doctors Are The Incarnation Of The God. In India, We Celebrate National 
+                Doctor’s Day On July Of 1st To Thank Physicians And Doctors For Their Dedicated Services To Patients. Becoming A Doctor Is Not An Easy Task. 
+                Educationally, It's A Very Challenging Part To Earn A Degree With Good Knowledge And Marks. A Doctor’s Routing Life Is Not As Easy As Normal People.
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Incidunt, laborum! Quibusdam molestias nemo voluptatum dolorum ut cumque eaque est voluptatibus veniam! Voluptatem accusamus, saepe illo consequuntur reiciendis laudantium quia molestias.
+                Assumenda sapiente beatae sunt obcaecati commodi tempore provident hic, temporibus ullam. Voluptatibus repellendus provident impedit magni, cum deserunt iusto nemo accusamus laborum. Voluptas laborum modi dolore et pariatur, eius necessitatibus.
+                Fugiat veritatis perferendis vero cum nam ipsa necessitatibus nemo animi nihil! Dignissimos ducimus nulla repellendus. Labore maiores, blanditiis suscipit facere magnam libero iste nihil, eaque quasi nobis nulla quibusdam neque!
+                Aspernatur rem distinctio ea obcaecati sint inventore repellat cupiditate eum rerum accusantium ducimus vitae, ullam est non magnam id. Recusandae iusto ut quas itaque quidem alias minima laborum perspiciatis tempore?
+                Expedita laborum quis animi, ducimus enim repellat quisquam, aut, dicta quae deleniti officia dolore necessitatibus. Facilis iure quo labore ullam nobis minus dolores maxime quisquam sequi maiores accusantium, reiciendis fugit!
+                Earum distinctio maxime nulla qui ipsa. Consequatur sequi neque inventore voluptatum et. Voluptates quidem sint, ut atque voluptatibus repellat reprehenderit tempora, minima suscipit libero laborum aut maiores saepe aliquam voluptatum!
+            </p>
+        </div>
+
+        <!-- Circular Image Section -->
+        <div class="image-container">
+            <div class="circle"><img class="img1" src="{% static 'img/pexels-pixabay-40568.jpg' %}" alt="Image 1"></div>
+            <div class="circle"><img class="img1" src="{% static 'img/pexels-shkrabaanthony-5214995.jpg' %}" alt="Image 2"></div>
+            <div class="circle"><img class="img1" src="{% static 'img/pexels-shvetsa-4586993.jpg' %}" alt="Image 3"></div>
+            <div class="circle"><img class="img1" src="{% static 'img/pexels-thirdman-5327585.jpg' %}" alt="Image 4"></div>
+            <div class="circle"><img class="img1" src="{% static 'img/pexels-thirdman-7659690.jpg' %}" alt="Image 5"></div>
+        </div>
+    </div>
+
+    <!-- it icludes login and appointment card -->
+    <div class="card-container">
+        <div class="card">
+            <div class="icon">
+                <img class="icon-img" src="https://img.icons8.com/ios-glyphs/30/000000/user--v1.png"/>
+            </div>
+            <button class="btn">Login</button>
+            <p class="card-txt">Click on the login button to explore our services.<br>
+            Your number is required when you are logging in.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="card">
+            <div class="icon">
+                <img class="icon-img" src="https://img.icons8.com/ios-filled/50/000000/calendar--v1.png"/>
+            </div>
+            <button class="btn">Make a Appointment</button>
+            <p class="card-txt">You can make the appointment with doctor<br>
+            according to your day, date, time.</p>
+        </div>
+    </div>
+
+ 
+ <!-- It includes the footer part -->
+
+    <footer class="footer-container">
+        <div class="left-section">
+            <ul>
+                <li>Privacy Policy</li>
+                <li>Non-Discrimination Policy</li>
+                <li>Terms of Use</li>
+                <li>Patient Rights and Responsibilities</li>
+            </ul>
+        </div>
+        <div class="center-section">
+            <p><span>Contact no :</span> 1234567890</p>
+            <p><span>Email id :</span> aabcdef@gmail.com</p>
+            <p><span>Address :</span> abcdefghijkl,mnopq</p>
+        </div>
+        <div class="right-section">
+            <p>Follow Us On</p>
+            <div class="footer-social-icons">
+                <a href="#"></a> <i class="fa-brands fa-facebook-f"></i>
+                <a href="#"></a> <i class="fa-brands fa-instagram"></i>
+                <a href="#"></a> <i class="fa-brands fa-twitter"></i>
+            </div>
+        </div>
+    </footer>
+
+
+</body>
+</html>

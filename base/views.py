@@ -16,7 +16,17 @@ from django.views.generic import RedirectView
 
 #import models.py
 
+# -----------------------------------------------------------------------------------------------------
 
+#help us page
+class BaseHelp(TemplateView):
+    template_name = "base/help.html"
+
+# -----------------------------------------------------------------------------------------------------
+
+#about us page
+class BaseAboutus(TemplateView):
+    template_name = "base/aboutus.html"
 
 
 # -----------------------------------------------------------------------------------------------------

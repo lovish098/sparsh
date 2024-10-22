@@ -1,0 +1,57 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preload">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Arizonia&family=Crimson+Text&display=swap" rel="stylesheet">
+    <title>Area profile</title>
+</head>
+<body>
+
+ {% include 'base/nav.html' %}    
+
+    <div class="">
+     {% if area_profile %}
+        <div>
+            <h1>{{ area_profile.uname }}</h1>
+            {% if area_profile.image %}
+                <img src="{{ area_profile.image.url }}" alt="Profile Image" style="width:150px;height:150px;">
+            {% else %}
+                <img src="{% static 'img/default.png' %}" alt="Default Profile Image" style="width:150px;height:150px;">
+            {% endif %}
+           
+            <p><strong>username:</strong> {{ area_profile.user }}</p>
+            <p><strong>Address:</strong> {{ area_profile.uaddress }}</p>
+            <p><strong>District :</strong> {{ area_profile.district }}</p>
+
+            <p><strong>OPD Types:</strong>
+                <ul>
+                    {% for opd_type in opd_types %}
+                        <li>{{ forloop.counter }}. {{ opd_type.name }}</li>
+                    {% endfor %}
+                </ul>
+            </p>
+            
+                
+
+
+            
+        </div>
+
+        <a href="{% url 'ruprofile' area_profile.uname %}">update details</a>
+    {% else %}
+        <p>No profile information available.</p>
+    {% endif %}
+    </div>
+    <br>
+
+    <br>
+
+ {% include 'base/footer.html' %}
+
+</body>
+</html>

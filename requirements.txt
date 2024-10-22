@@ -1,0 +1,6 @@
+#  u/p/e : admin/root/sparsh@gmail.com
+asgiref==3.8.1
+Django==5.1.1
+pillow==11.0.0
+sqlparse==0.5.1
+tzdata==2024.2

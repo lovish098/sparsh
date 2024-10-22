@@ -1,0 +1,142 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+ 
+
+
+/* Container for the Title and Lines */
+.welcome {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Title Styling */
+  .wlcm-txt {
+    font-family: "Arizonia",sans-serif;
+    font-size: 3em;
+    margin: 2rem;
+    font-weight: 500;
+    white-space: nowrap;
+
+  }
+  
+  /* Line Styling */
+  .line {
+    border-top: 1px solid black;
+    width: 18rem;
+    position: relative;
+  }
+  
+  .line::before, .line::after {
+    content: '';
+    width:  8px;
+    height: 8px;
+    background-color: black;
+    border-radius: 50%;
+    position: absolute;
+    top: -4px;
+  }
+  
+  .line::before {
+    left: -10px;
+  }
+  
+  .line::after {
+    right: -10px;
+  }
+
+  /* It is the css of procedure box */
+  .container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.box {
+    width: 50rem; 
+    height: 30rem; 
+    background: linear-gradient(90deg, #1597E0 0%, #5AAEDE 32%, #A7C3D3 53%, #5EAFDE 74%, #1597E0 100%);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.6);
+    border-radius: 40px;
+}
+
+.steps li{
+  display: flex;
+  justify-content: flex-start;
+  font-size: 1.5rem;
+  line-height: 5rem;
+  padding-left: 2rem;
+}
+
+.steps li span {
+  font-weight: bold;
+}
+/* It is the css of district container */
+
+.district-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 40px;
+  background: linear-gradient(90deg, #1597E0 0%, #5AAEDE 32%, #A7C3D3 53%, #5EAFDE 74%, #1597E0 100%);
+  margin-top: 4rem;
+  margin-left: 14rem;
+  margin-bottom: 4rem;
+  width: 50rem;
+}
+
+.content {
+  text-align: center;
+  width: 50rem;
+  height: 40rem;
+  background: url('img/img.png') no-repeat center/cover; /* Empty background for now */
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 40px;
+}
+
+.content h1 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  font-family: Arial, sans-serif;
+}
+
+.districts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 4 equal columns */
+  grid-gap: 2rem; 
+  justify-content: space-evenly; /* Center items horizontally */
+  padding-left: 4rem;
+}
+
+.district {
+  padding: 10px 20px;
+  border-radius: 25px;
+  background-color: white;
+  border: 1px solid black;
+  font-family: Arial, sans-serif;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  width: 20rem;
+  text-decoration: none;
+}
+
+.district:hover {
+  background-color: #f1f1f1;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+  background-color: #1597E0;
+}
+
+.district:active {
+  transform: scale(0.98);
+}
+
+
+

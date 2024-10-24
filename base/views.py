@@ -485,7 +485,7 @@ class BaseContactUs(FormView):
             subject,
             full_message,
             email,
-            ['chamruoraon1403@gmail.com'], 
+            ['sparsh.healthservice@gmail.com'], 
             fail_silently=False,
         )
 

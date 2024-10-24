@@ -12,6 +12,7 @@ from django import forms
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
+from django.conf import settings
 
 # import essential modules for auth
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -184,14 +185,28 @@ class CancelAppointmentView(LoginRequiredMixin, View):
        
         appointment.delete()
 
-        # # Send an email to the patient informing them of the cancellation
-        # if appointment.user_profile.uemail:  # Check if the patient has an email
-        #     subject = "Appointment Cancellation Notification"
-        #     message = f"Dear {appointment.user_profile.uname},\n\nYour appointment (ID: {appointment.appointment_id}) scheduled for {appointment.time_slot} has been canceled. Please contact us if you need further assistance.\n\nRegards,\nThe Medical Team"
-        #     recipient_list = [appointment.user_profile.uemail]
-        #     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, recipient_list)
+        # Send email notification if user's email is available
+        if appointment.user_profile.uemail:
+            subject = "Appointment Booking Notification"
+            message = (
+                f"Dear {appointment.user_profile.uname},\n\n"
+                f"Your appointment (ID: {appointment.appointment_id}) has been canceled due to doctor meetings.\n"
+                f"Time Slot: {appointment.time_slot}\n\n"
+                "Thank you!"
+            )
+            recipient_list = [appointment.user_profile.uemail]
+            try:
+                send_mail(
+                    subject,
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,  # Sender email from settings
+                    recipient_list,
+                    fail_silently=False
+                )
+                messages.success(request, "Appointment cancel by doctor  and email notification sent.")
+            except Exception as e:
+                messages.error(request, f"Appointment canceled, but an error occurred while sending email: {e}")
 
-        # Show a success message and redirect the doctor back to the dashboard
         messages.success(request, "The appointment has been canceled and the patient has been notified.")
         return redirect('ddashboard')
 
@@ -228,8 +243,6 @@ class BaseAppointment(TemplateView):
     model = UserProfile
     template_name = "appointment/bookappointment.html"
     context_object_name = 'user_profile'
-
-    # form_class = AppointmentForm
     success_url = reverse_lazy('home') 
 
     def get_context_data(self, **kwargs):
@@ -240,37 +253,38 @@ class BaseAppointment(TemplateView):
         context[self.context_object_name] = user_profile
 
         # Fetch the related AreaProfile
-        area_profile = AreaProfile.objects.filter(user=user_profile.user).first() if user_profile else None
+        # area_profile = AreaProfile.objects.filter(user=user_profile.user).first() if user_profile else None
+        # context['area_profile'] = area_profile
+        area_profile = AreaProfile.objects.all()
         context['area_profile'] = area_profile
 
         # Fetch all OPD types and pass them to the context
         context['opd_types'] = OpdType.objects.all()
 
-         # Fetch all districts and pass them to the context
+        # Fetch all districts and pass them to the context
         context['district'] = District.objects.all()
 
-
+        # Fetch available time slots
         morning_slots = TimeSlot.get_available_slots('M')  
         evening_slots = TimeSlot.get_available_slots('E') 
-      
+
         context['morning_slots'] = morning_slots
         context['evening_slots'] = evening_slots
 
         return context
 
     def post(self, request, *args, **kwargs):
-       
         user_profile = UserProfile.objects.filter(user=self.request.user).first()
-        
-       
+
+        # Get OPD type and time slot from POST request
         opd_type_id = request.POST.get('opd')  
         time_slot_id = request.POST.get('time_slot') 
-        
+
         if not user_profile:
             messages.error(request, "User profile not found.")
             return redirect('home')
-        
-       
+
+        # Validate OPD type and time slot
         opd_type = OpdType.objects.filter(id=opd_type_id).first()
         time_slot = TimeSlot.objects.filter(id=time_slot_id, status='A').first()  
 
@@ -282,23 +296,46 @@ class BaseAppointment(TemplateView):
             messages.error(request, "Selected time slot is not available.")
             return redirect('home')
 
-      
+        # Create a new appointment
         appointment = Appointment.objects.create(
             user_profile=user_profile,
             opd_type=opd_type,
-            appointment_status='B', 
+            appointment_status='B',  # B for booked
             time_slot=time_slot
         )
 
-       
+        # Mark the time slot as booked
         time_slot.status = 'B'
         time_slot.save()
 
+        # Send success message
         messages.success(request, "Appointment booked successfully.")
+        
+        # Send email notification if user's email is available
+        if appointment.user_profile.uemail:
+            subject = "Appointment Booking Notification"
+            message = (
+                f"Dear {appointment.user_profile.uname},\n\n"
+                f"Your appointment (ID: {appointment.appointment_id}) has been successfully booked.\n"
+                f"Time Slot: {appointment.time_slot}\n\n"
+                "Thank you!"
+            )
+            recipient_list = [appointment.user_profile.uemail]
+            try:
+                send_mail(
+                    subject,
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,  # Sender email from settings
+                    recipient_list,
+                    fail_silently=False
+                )
+                messages.success(request, "Appointment booked and email notification sent.")
+            except Exception as e:
+                messages.error(request, f"Appointment booked, but an error occurred while sending email: {e}")
+
         return redirect('home')
 
-
-        
+      
 
 
 

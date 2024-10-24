@@ -96,29 +96,83 @@
 
             </script>
     </div>
- 
+  
     <form method="POST" action=""> 
         {% csrf_token %}
         <div style="display: flex; justify-content: space-evenly; align-items: center; margin-left: 2rem; margin-right: 2rem;">
             <div>
 
                 <!-- District Input Field -->
-            <label for="district">District :</label>
+           <!--  <label for="district">District :</label>
             {% if user_profile.district %}
                 <input type="text" id="district" name="district" value="{{ user_profile.district.name }}" readonly>
             {% else %}
                 <input type="text" id="district" name="district" value="No Area Profile available for this user" readonly>
             {% endif %}
             <br>
+ -->
 
+       <!--    <label for="district">District :</label>
+            <select id="district" name="district">
+                {% for district in district %}
+                    <option value="{{ district.id }}">{{ district.name }}</option>
+                {% endfor %}
+            </select><br> -->
+
+
+
+            <label for="district">District :</label>
+            <select id="district" name="district">
+                <!-- Placeholder option for no selection -->
+                <option value="">--- Select a District ---</option>
+                
+                <!-- Loop through all districts -->
+                {% for district in district %}
+                    <option value="{{ district.id }}" 
+                        {% if user_profile.district and user_profile.district.id == district.id %}selected{% endif %}>
+                        {{ district.name }}
+                    </option>
+                {% endfor %}
+            </select><br>
+
+ 
+
+ 
             <!-- Hospital Input Field -->
-            <label for="hospital">Select hospital :</label>
+<!--             <label for="hospital">Select hospital :</label>
             {% if user_profile.area_profile %}
+            {% for district in area_profile %}
+                    <option value="{{ district.id }}">{{ district.uname }}</option>
+                {% endfor %}
                 <input type="text" id="hospital" name="hospital" value="{{ user_profile.area_profile.uname }}" readonly>
             {% else %}
                 <input type="text" id="hospital" name="hospital" value="No Area Profile available for this user" readonly>
             {% endif %}
-            <br>
+            <br> -->
+
+            <!-- <label for="area_profile">Hospital :</label>
+            <select id="area_profile" name="area_profile">
+                {% for area_profile in area_profile %}
+                    <option value="{{ area_profile.id }}">{{ area_profile.uname }}</option>
+                {% endfor %}
+            </select><br>  -->
+
+
+
+            <label for="area_profile">Hospital :</label>
+            <select id="area_profile" name="area_profile">
+                <!-- Placeholder option for no selection -->
+                <option value="">--- Select a Hospital ---</option>
+                
+                <!-- Loop through all hospitals -->
+                {% for hospital in area_profile %}
+                    <option value="{{ hospital.id }}" 
+                        {% if user_profile.area_profile and user_profile.area_profile.id == hospital.id %}selected{% endif %}>
+                        {{ hospital.uname }}
+                    </option>
+                {% endfor %}
+            </select><br>
+
 
     
             <label for="opd type">OPD type :</label>

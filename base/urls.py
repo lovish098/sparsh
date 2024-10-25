@@ -18,6 +18,9 @@ urlpatterns = [
     path('uprofile/',BaseUserProfile.as_view(),name='uprofile'),
     path('uuprofile/<str:uname>/', BaseUserUpdateProfile.as_view(), name='uuprofile'),
 
+    #appointment download
+     path('dappointment/', DownloadAppointmentPDF.as_view(), name='dappointment'),
+
     #doctor user
     path('dlogin/',BaseDoctorLogin.as_view(),name='dlogin'),
     path('logout/', LogoutView.as_view(), name='logout'),

@@ -13,6 +13,15 @@ from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.conf import settings
+from django.http import HttpResponse
+
+#for pdf usage
+import os 
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import inch
+from reportlab.pdfgen import canvas
+
 
 # import essential modules for auth
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -89,7 +98,7 @@ class AreaProfileForm(forms.ModelForm):
         fields = ['uname','uaddress','image','opd_type','district']
 
 
-class BaseAreaUpdateProfile(UpdateView):
+class BaseAreaUpdateProfile(LoginRequiredMixin,UpdateView):
     template_name = "profile/ruprofile.html"
     model = AreaProfile
     form_class = AreaProfileForm  
@@ -121,7 +130,7 @@ class BaseAreaUpdateProfile(UpdateView):
 
 
 #Area  profile page
-class BaseAreaProfile(DetailView):
+class BaseAreaProfile(LoginRequiredMixin,DetailView):
     model = AreaProfile
     template_name = "profile/regionalprofile.html"
     context_object_name = 'area_profile'
@@ -238,8 +247,55 @@ def get_available_slots(request, session):
 
 # -----------------------------------------------------------------------------------------------------
 
+def create_pdf(user_name, unique_id, age, mobile, opd_type):
+    # Use Django's static method to get the logo path if it's in static files
+    logo_path = os.path.join(settings.BASE_DIR, "static", "img", "logo.png")  
 
-class BaseAppointment(TemplateView):
+    # Create the output directory if it doesn't exist
+    output_dir = os.path.join(settings.BASE_DIR, "media", 'appointment')
+    os.makedirs(output_dir, exist_ok=True)  # Create the directory if it doesn't exist
+
+    # Define the output PDF file path
+    output_file_path = os.path.join(output_dir, f'{unique_id}_appointment.pdf')
+
+    # Create a canvas
+    c = canvas.Canvas(output_file_path, pagesize=letter)
+    width, height = letter
+
+    # Draw the logo on the left side
+    try:
+        logo_width = 2 * inch  # Set the width of the logo
+        logo_height = 2 * inch  # Set the height of the logo
+        c.drawImage(logo_path, 0.5 * inch, height - logo_height - 0.5 * inch, width=logo_width, height=logo_height)
+    except Exception as e:
+        print(f"Error loading logo: {e}")
+
+    # Set the position for the user details on the right side
+    text_x = 4 * inch
+    text_y = height - 1 * inch
+
+    # Set font and color for the user details
+    c.setFont("Helvetica-Bold", 12)
+    c.setFillColor(colors.black)
+
+    # Draw user details
+    c.drawString(text_x, text_y - 0.2 * inch, f"Unique ID: {unique_id}")
+    c.drawString(text_x, text_y - 0.6 * inch, f"OPD Type: {opd_type}")  
+    c.drawString(text_x, text_y, f"Name: {user_name}")
+    c.drawString(text_x, text_y - 0.4 * inch, f"Age: {age}")
+    c.drawString(text_x, text_y - 0.8 * inch, f"Mobile No: {mobile}") 
+
+    # Draw a dark black line below the user details
+    c.setStrokeColor(colors.black)
+    c.setLineWidth(2)
+    c.line(text_x - 0.5 * inch, text_y - 0.9 * inch, width - 0.5 * inch, text_y - 0.9 * inch)  # Adjusted line position
+
+    # Save the PDF
+    c.save()
+
+    return output_file_path
+
+class BaseAppointment(LoginRequiredMixin,TemplateView):
     model = UserProfile
     template_name = "appointment/bookappointment.html"
     context_object_name = 'user_profile'
@@ -308,6 +364,17 @@ class BaseAppointment(TemplateView):
         time_slot.status = 'B'
         time_slot.save()
 
+        # Generate PDF
+        pdf_file_path = create_pdf(
+            user_name=user_profile.uname,
+            unique_id=appointment.appointment_id,
+            age=user_profile.age,
+            mobile=user_profile.umobile,
+            opd_type=opd_type,
+        )
+
+
+
         # Send success message
         messages.success(request, "Appointment booked successfully.")
         
@@ -335,7 +402,50 @@ class BaseAppointment(TemplateView):
 
         return redirect('home')
 
-      
+
+
+class DownloadAppointmentPDF(View):
+    template_name = "appointment/downloadappointment.html"  # Ensure this template exists
+
+    def get(self, request):
+        return render(request, self.template_name)
+
+    def post(self, request):
+        unique_id = request.POST.get('unique_id')
+
+        # Fetch the appointment based on the unique ID
+        appointment = Appointment.objects.filter(appointment_id=unique_id).first()
+
+        if not appointment:
+            messages.error(request, "No appointment found with this ID.")
+            return redirect('download_appointment_pdf')  # Redirect to the download page
+
+        # Generate the PDF file
+        pdf_file_path = create_pdf(
+            user_name=appointment.user_profile.uname,
+            unique_id=appointment.appointment_id,
+            age=appointment.user_profile.age,
+            mobile=appointment.user_profile.umobile,
+            opd_type=appointment.opd_type,
+        )
+
+        # Check if the PDF file was created successfully
+        if pdf_file_path is None:
+            messages.error(request, "Failed to generate the PDF. Please try again.")
+            return redirect('home')  # Redirect to the download page
+ 
+        # Serve the PDF file for download
+        try:
+            with open(pdf_file_path, 'rb') as pdf:
+                response = HttpResponse(pdf.read(), content_type='application/pdf')
+                response['Content-Disposition'] = f'attachment; filename="{appointment.appointment_id}_appointment.pdf"'
+                return response
+        except FileNotFoundError:
+            messages.error(request, "The PDF file was not found. Please try again.")
+            return redirect('home')  # Redirect to the download page
+        except Exception as e:
+            messages.error(request, f"An error occurred while trying to download the PDF: {e}")
+            return redirect('home')
 
 
 
@@ -344,7 +454,7 @@ class BaseAppointment(TemplateView):
 # -----------------------------------------------------------------------------------------------------
 
 #Doctor  profile page
-class BaseDoctorProfile(DetailView):
+class BaseDoctorProfile(LoginRequiredMixin,DetailView):
     model = DoctorProfile
     template_name = "profile/doctorprofile.html"
     context_object_name = 'doctor_profile'
@@ -359,7 +469,7 @@ class DoctorProfileForm(forms.ModelForm):
         model = DoctorProfile
         fields = ['uname', 'umobile', 'uemail', 'uaddress', 'gender', 'age', 'date_of_birth', 'uaadhar', 'image', 'area_profile','opd_type','district']
 
-class BaseDoctorUpdateProfile(UpdateView):
+class BaseDoctorUpdateProfile(LoginRequiredMixin,UpdateView):
     template_name = "profile/duprofile.html"
     model = DoctorProfile
     form_class = DoctorProfileForm  
@@ -407,7 +517,7 @@ class UserProfileForm(forms.ModelForm):
         model = UserProfile
         fields = ['uname', 'umobile', 'uemail', 'uaddress', 'gender', 'age', 'date_of_birth', 'uaadhar', 'image', 'area_profile','district']
 
-class BaseUserUpdateProfile(UpdateView):
+class BaseUserUpdateProfile(LoginRequiredMixin,UpdateView):
     template_name = "profile/uuprofile.html"
     model = UserProfile
     form_class = UserProfileForm  
@@ -448,7 +558,7 @@ class BaseUserUpdateProfile(UpdateView):
 # -----------------------------------------------------------------------------------------------------
 
 #user profile page
-class BaseUserProfile(DetailView):
+class BaseUserProfile(LoginRequiredMixin,DetailView):
     model = UserProfile
     template_name = "profile/userprofile.html"
     context_object_name = 'user_profile'

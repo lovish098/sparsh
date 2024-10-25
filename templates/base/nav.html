@@ -79,7 +79,7 @@
                 {% for user in request.user.groups.all %}
                 {% if user.name == 'user' %}
                 <li><a href="{% url 'appointment' %}"><i class="fa-solid fa-calendar-day"></i>&ensp;Book Appointment</a></li>
-                <li><a href="download.html"><i class="fa-solid fa-download"></i>&ensp;Download Appointment</a></li>
+                <li><a href="{% url 'dappointment' %}"><i class="fa-solid fa-download"></i>&ensp;Download Appointment</a></li>
                 {% elif user.name == 'doctor' %}
                 <li><a href="{% url 'ddashboard' %}"><i class="fa-solid fa-download"></i>&ensp;Dashboard</a></li>
                 {% elif user.name == 'area' %}

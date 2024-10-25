@@ -1,6 +1,8 @@
 #  u/p/e : admin/root/sparsh@gmail.com
 asgiref==3.8.1
+chardet==5.2.0
 Django==5.1.1
 pillow==11.0.0
+reportlab==4.2.5
 sqlparse==0.5.1
 tzdata==2024.2

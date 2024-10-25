@@ -107,36 +107,50 @@ class TimeSlot(models.Model):
     session = models.CharField(max_length=1, choices=SESSION_CHOICES)
     time = models.TimeField() 
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='A') 
+    opd_type = models.ForeignKey(OpdType, on_delete=models.CASCADE, null=True, blank=True)  # New field
+
     def __str__(self):
-        return f"{self.get_session_display()} - {self.time.strftime('%H:%M')} ({self.get_status_display()})"
+        # return f"{self.get_session_display()} - {self.time.strftime('%H:%M')} ({self.get_status_display()})"
+        # return f"{self.get_session_display()} - {self.time.strftime('%H:%M')}"
+        opd_type_display = self.opd_type.name if self.opd_type else "No OPD Type"
+        return f" {opd_type_display} - {self.get_session_display()} - {self.time.strftime('%H:%M')}"
 
     @staticmethod
     def generate_time_slots():
         """Generate time slots for Morning and Evening Sessions."""
         time_slots = []
 
-       
+        # Example OPD types (you can customize this as needed)
+        opd_types = OpdType.objects.all()  # Fetch all OPD types
+        
+        # Morning session: 09:00 to 12:00 (42 slots at 5-minute intervals)
         start_time = time(9, 0)
         total_slots_morning = 42
-        for _ in range(total_slots_morning):
-            time_slots.append(('M', start_time))
-            start_time = (datetime.combine(datetime.today(), start_time) + timedelta(minutes=5)).time()
+        for opd_type in opd_types:
+            for _ in range(total_slots_morning):
+                time_slots.append((opd_type, 'M', start_time))
+                start_time = (datetime.combine(datetime.today(), start_time) + timedelta(minutes=5)).time()
+            start_time = time(9, 0)  # Reset start time for the next OPD type
 
         # Evening session: 13:00 to 17:00 (48 slots at 5-minute intervals)
         start_time = time(13, 0)
         total_slots_evening = 48
-        for _ in range(total_slots_evening):
-            time_slots.append(('E', start_time))
-            start_time = (datetime.combine(datetime.today(), start_time) + timedelta(minutes=5)).time()
+        for opd_type in opd_types:
+            for _ in range(total_slots_evening):
+                time_slots.append((opd_type, 'E', start_time))
+                start_time = (datetime.combine(datetime.today(), start_time) + timedelta(minutes=5)).time()
+            start_time = time(13, 0)  # Reset start time for the next OPD type
 
         # Create time slots in the database if they don't already exist
-        for session, time_slot in time_slots:
-            TimeSlot.objects.get_or_create(session=session, time=time_slot)
+        for opd_type, session, time_slot in time_slots:
+            TimeSlot.objects.get_or_create(session=session, time=time_slot, opd_type=opd_type)
 
     @staticmethod
-    def get_available_slots(session):
-        
-        return TimeSlot.objects.filter(session=session, status='A')  
+    def get_available_slots(session, opd_type=None):
+        """Get available time slots, optionally filtered by OPD type."""
+        if opd_type:
+            return TimeSlot.objects.filter(session=session, status='A', opd_type=opd_type)
+        return TimeSlot.objects.filter(session=session, status='A')
 
 
 class Appointment(models.Model):

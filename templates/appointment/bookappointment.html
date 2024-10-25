@@ -12,7 +12,7 @@
 <body>
 
     {% include 'base/nav.html' %}
-
+    
     <div class="welcome">
         <div class="line"></div>
         <h1 class="wlcm-txt">Book An Appointment</h1>
@@ -96,202 +96,162 @@
 
             </script>
     </div>
-  
-    <form method="POST" action=""> 
-        {% csrf_token %}
-        <div style="display: flex; justify-content: space-evenly; align-items: center; margin-left: 2rem; margin-right: 2rem;">
-            <div>
+    
+     <div class="form-container">
 
-                <!-- District Input Field -->
-           <!--  <label for="district">District :</label>
-            {% if user_profile.district %}
-                <input type="text" id="district" name="district" value="{{ user_profile.district.name }}" readonly>
-            {% else %}
-                <input type="text" id="district" name="district" value="No Area Profile available for this user" readonly>
-            {% endif %}
-            <br>
- -->
-
-       <!--    <label for="district">District :</label>
-            <select id="district" name="district">
-                {% for district in district %}
-                    <option value="{{ district.id }}">{{ district.name }}</option>
-                {% endfor %}
-            </select><br> -->
-
-
-
-            <label for="district">District :</label>
-            <select id="district" name="district">
-                <!-- Placeholder option for no selection -->
-                <option value="">--- Select a District ---</option>
-                
-                <!-- Loop through all districts -->
-                {% for district in district %}
-                    <option value="{{ district.id }}" 
-                        {% if user_profile.district and user_profile.district.id == district.id %}selected{% endif %}>
-                        {{ district.name }}
-                    </option>
-                {% endfor %}
-            </select><br>
-
- 
-
- 
-            <!-- Hospital Input Field -->
-<!--             <label for="hospital">Select hospital :</label>
-            {% if user_profile.area_profile %}
-            {% for district in area_profile %}
-                    <option value="{{ district.id }}">{{ district.uname }}</option>
-                {% endfor %}
-                <input type="text" id="hospital" name="hospital" value="{{ user_profile.area_profile.uname }}" readonly>
-            {% else %}
-                <input type="text" id="hospital" name="hospital" value="No Area Profile available for this user" readonly>
-            {% endif %}
-            <br> -->
-
-            <!-- <label for="area_profile">Hospital :</label>
-            <select id="area_profile" name="area_profile">
-                {% for area_profile in area_profile %}
-                    <option value="{{ area_profile.id }}">{{ area_profile.uname }}</option>
-                {% endfor %}
-            </select><br>  -->
-
-
-
-            <label for="area_profile">Hospital :</label>
-            <select id="area_profile" name="area_profile">
-                <!-- Placeholder option for no selection -->
-                <option value="">--- Select a Hospital ---</option>
-                
-                <!-- Loop through all hospitals -->
-                {% for hospital in area_profile %}
-                    <option value="{{ hospital.id }}" 
-                        {% if user_profile.area_profile and user_profile.area_profile.id == hospital.id %}selected{% endif %}>
-                        {{ hospital.uname }}
-                    </option>
-                {% endfor %}
-            </select><br>
-
+        <form method="POST" action=""> 
+            {% csrf_token %}
+    
 
     
-            <label for="opd type">OPD type :</label>
-            <select id="opd" name="opd">
-                {% for opd_type in opd_types %}
-                    <option value="{{ opd_type.id }}">{{ opd_type.name }}</option>
-                {% endfor %}
-            </select><br>
-            
-
-
-                
-    
-                <label for="name">Patient's name :</label>
-                <input type="text" id="name" name="name" value="{{ user_profile.uname }}" required><br>
-    
-                <label for="gender">Gender :</label>
-                <select id="gender" name="gender">
-                    <option value="M" {% if user_profile.gender == 'M' %}selected{% endif %}>Male</option>
-                    <option value="F" {% if user_profile.gender == 'F' %}selected{% endif %}>Female</option>
-                    <option value="O" {% if user_profile.gender == 'O' %}selected{% endif %}>Other</option>
+                <label for="district">District :</label>
+                <select id="district" name="district">
+                    <!-- Placeholder option for no selection -->
+                    <option value="">--- Select a District ---</option>
+                    
+                    <!-- Loop through all districts -->
+                    {% for district in district %}
+                        <option value="{{ district.id }}" 
+                            {% if user_profile.district and user_profile.district.id == district.id %}selected{% endif %}>
+                            {{ district.name }}
+                        </option>
+                    {% endfor %}
                 </select><br>
     
-                <label for="age">Age :</label>
-                <input type="number" id="age" name="age" required value="{{ user_profile.age }}"><br>
     
-                <label for="phone">Phone number :</label>
-                <input type="tel" id="phone" name="phone" required value="{{ user_profile.umobile }}"><br>
     
-                <label for="aadhar">Aadhar number :</label>
-                <input type="text" id="aadhar" name="aadhar" required value="{{ user_profile.uaadhar }}"><br>
     
-
-                <label for="aadhar">Email id :</label>
-                <input type="text" id="aadhar" name="uemail" required value="{{ user_profile.uemail }}"><br>
-
-                <br>
-                <span style="color: red;">select only one slote morning or evening</span>
-                <br><br>
-
-                <h3>Available Slots</h3>
-                <select id="slots_select" name="time_slot">
-                    {% for slot in morning_slots %}
-                        <option name="time_slot" value="{{ slot.id }}">
-                            Morning: {{ slot.time }} - {{ slot.status }} ({{ slot.get_session_display }})
-                        </option>
-                    {% endfor %}
-                    {% for slot in evening_slots %}
-                        <option name="time_slot" value="{{ slot.id }}">
-                            Evening: {{ slot.time }} - {{ slot.status }} ({{ slot.get_session_display }})
-                        </option>
-                    {% empty %}
-                        <option disabled>No available slots at the moment.</option>
-                    {% endfor %}
-                </select>
-                
-                <!-- <script>
-                    // Function to fetch available slots dynamically and update the content
-                    function refreshSlots() {
-                        console.log('Refreshing all slots...');
+    
+                <label for="area_profile">Hospital :</label>
+                <select id="area_profile" name="area_profile">
+                    <!-- Placeholder option for no selection -->
+                    <option value="">--- Select a Hospital ---</option>
                     
-                        // Fetch updated morning slots
-                        fetch(`/get_available_slots/M/`)
-                            .then(response => response.json())
-                            .then(data => {
-                                const morningSlots = data.slots;
-                                updateSlots(morningSlots, 'Morning');
-                            })
-                            .catch(error => {
-                                console.error("Error fetching morning slots:", error);
-                            });
-                
-                        // Fetch updated evening slots
-                        fetch(`/get_available_slots/E/`)
-                            .then(response => response.json())
-                            .then(data => {
-                                const eveningSlots = data.slots;
-                                updateSlots(eveningSlots, 'Evening');
-                            })
-                            .catch(error => {
-                                console.error("Error fetching evening slots:", error);
-                            });
-                    }
-                
-                    // Helper function to update the slot options
-                    function updateSlots(slots, timeOfDay) {
-                        const slotSelect = document.getElementById('slots_select');
-                        
-                        // Clear existing options
-                        slotSelect.innerHTML = '';
-                
-                        // Add new slot options
-                        slots.forEach(slot => {
-                            const option = document.createElement('option');
-                            option.value = slot.id;
-                            option.textContent = `${timeOfDay}: ${slot.time} - ${slot.status} (${slot.session})`;
-                            slotSelect.appendChild(option);
-                        });
-                    }
-                
-                    // Set intervals to refresh both morning and evening slots every 5 seconds
-                    setInterval(function() {
-                        refreshSlots();
-                    }, 5000);
-                </script> -->
-                
-                
-
-                <br><br>
-                <button type="submit">make appointment</button><br><br>
-            </div>
+                    <!-- Loop through all hospitals -->
+                    {% for hospital in area_profile %}
+                        <option value="{{ hospital.id }}" 
+                            {% if user_profile.area_profile and user_profile.area_profile.id == hospital.id %}selected{% endif %}>
+                            {{ hospital.uname }}
+                        </option>
+                    {% endfor %}
+                </select><br>
     
-            
-        </div>
-       
-    </form>
+         
+                    <label for="name">Patient's name :</label>
+                    <input type="text" id="name" name="name" value="{{ user_profile.uname }}" required><br>
+        
+                    <label for="gender">Gender :</label>
+                    <select id="gender" name="gender">
+                        <option value="M" {% if user_profile.gender == 'M' %}selected{% endif %}>Male</option>
+                        <option value="F" {% if user_profile.gender == 'F' %}selected{% endif %}>Female</option>
+                        <option value="O" {% if user_profile.gender == 'O' %}selected{% endif %}>Other</option>
+                    </select><br> 
+        
+                    <label for="age">Age :</label>
+                    <input type="number" id="age" name="age" required value="{{ user_profile.age }}"><br>
+        
+                    <label for="phone">Phone number :</label>
+                    <input type="tel" id="phone" name="phone" required value="{{ user_profile.umobile }}"><br>
+        
+                    <label for="aadhar">Aadhar number :</label>
+                    <input type="text" id="aadhar" name="aadhar" required value="{{ user_profile.uaadhar }}"><br>
+        
+    
+                    <label for="email">Email id :</label>
+                    <input type="text" id="email" name="uemail" required value="{{ user_profile.uemail }}"><br>
 
 
-  
+
+                    <label for="opd type">OPD type :</label>
+                    <select id="opd" name="opd">
+                        <option value="">--- Select a time slot ---</option>
+                        {% for opd_type in opd_types %}
+                            <option value="{{ opd_type.id }}">{{ opd_type.name }}</option>
+                        {% endfor %}
+                    </select>
+
+    
+                    <br>
+                    <span style="color: red;">Select only one slote Morning or Evening</span>
+                    <br>
+    
+                    <h3>Available Slots</h3>
+                    <select id="slots_select" name="time_slot">
+                        <option value="">--- Select a time slot ---</option>
+                        {% for slot in morning_slots %}
+                            <option name="time_slot" value="{{ slot.id }}">
+                               {{ slot.opd_type }} - {{ slot.get_session_display }} - {{ slot.time }} 
+                            </option>
+                        {% endfor %}
+                        {% for slot in evening_slots %}
+                            <option name="time_slot" value="{{ slot.id }}">
+                                {{ slot.opd_type }} - {{ slot.get_session_display }} - {{ slot.time }} 
+                            </option>
+                        {% empty %}
+                            <option disabled>No available slots at the moment.</option>
+                        {% endfor %}
+                    </select>
+
+
+                   <div class="button-container">
+                        <button type="submit" class="submit-btn">Make Appointment</button>
+                
+                   </div>
+
+                                       
+            </div>
+
+
+           
+        </form>
+
+     </div>
+
+     
+
+
+  <!-- js scripts to track which opd has selected -->
+        <script>
+            // Get the select element by its ID
+            const opdSelect = document.getElementById('opd');
+            const slotsSelect = document.getElementById('slots_select'); // Make sure this ID matches your HTML
+
+            // Add an event listener for the 'change' event
+            opdSelect.addEventListener('change', function() {
+                // Get the selected option
+                const selectedOption = opdSelect.options[opdSelect.selectedIndex];
+                // Get the name (text content) of the selected option
+                const selectedName = selectedOption.text;
+                // Log the selected name to the console
+                console.log("Selected OPD Type: " + selectedName);
+
+                // Call the function to filter and print time slots
+                filterAndPrintTimeSlots(selectedName); // Pass the selected name to the function
+            });
+
+            // Function to filter and print time slots to the console
+            function filterAndPrintTimeSlots(selectedName) {
+                console.log("Available Time Slots:");
+
+                for (let i = 0; i < slotsSelect.options.length; i++) {
+                    const slot = slotsSelect.options[i];
+                    const slotText = slot.text; // Get the text of the slot
+                    const slotValue = slot.value; // Get the value of the slot
+                    const slotOpdId = slot.getAttribute("data-opd"); // Get the associated OPD type ID
+
+                    // Log the slot details
+                    console.log(`Slot: ${slotText}, Value: ${slotValue}, OPD ID: ${slotOpdId}`);
+
+                    // Check if the slot text matches the selected OPD type name
+                    if (slotText.includes(selectedName)) { // Use includes to check for a match
+                        console.log("Great! This slot matches the selected OPD type.");
+                        slot.style.display = "block"; // Show matching slot
+                    } else {
+                        slot.style.display = "none"; // Hide non-matching slot
+                    }
+                }
+            }
+        </script>
 
    {% include 'base/footer.html' %}
 

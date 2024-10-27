@@ -66,26 +66,25 @@ class RegionalPatientProfileView(LoginRequiredMixin, DetailView):
 # dash board for area /regional
 
 class BaseAreaDashboard(LoginRequiredMixin, TemplateView):
-
     template_name = 'dashboard/rdashboard.html'
-
     model = AreaProfile
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        # Get the area profile for the logged-in user
         area_profile = AreaProfile.objects.filter(user=self.request.user).first()
-               
-        doctor_profile = DoctorProfile.objects.all()
-        user_profile = UserProfile.objects.all()
+
+        # Filter doctor profiles and user profiles based on the current user's area profile
+        doctor_profiles = DoctorProfile.objects.filter(area_profile=area_profile)
+        user_profiles = UserProfile.objects.filter(area_profile=area_profile)
 
         # Add to context
         context['area_profile'] = area_profile
-        context['doctor_profile'] = doctor_profile
-        context['user_profile'] =user_profile
+        context['doctor_profile'] = doctor_profiles
+        context['user_profile'] = user_profiles
 
         return context
-
 
    
 
@@ -146,23 +145,33 @@ class BaseAreaProfile(LoginRequiredMixin,DetailView):
 
 # -----------------------------------------------------------------------------------------------------
 
-
 class BaseDoctorDashboard(LoginRequiredMixin, ListView):
     model = Appointment
     template_name = 'dashboard/ddashboard.html'
     context_object_name = 'appointments'
-    
+
     def get_queryset(self):
-        # Get the doctor profile of the logged-in user
-        doctor_profile = DoctorProfile.objects.get(user=self.request.user)
-        
-        # Fetch appointments based on doctor's OPD type
-        return Appointment.objects.filter(opd_type=doctor_profile.opd_type).select_related('user_profile', 'time_slot')
-    
+        # Return all appointments without filtering here
+        return Appointment.objects.all()
+
     def get_context_data(self, **kwargs):
         # Add the doctor profile to the context
         context = super().get_context_data(**kwargs)
-        context['doctor_profile'] = DoctorProfile.objects.get(user=self.request.user)
+        doctor_profile = DoctorProfile.objects.get(user=self.request.user)
+        context['doctor_profile'] = doctor_profile
+        
+        # Fetch appointments based on doctor's OPD type
+        appointments = Appointment.objects.filter(opd_type=doctor_profile.opd_type).select_related('user_profile', 'time_slot')
+
+        # Optional: Filter by area profile if needed
+        # if doctor_profile.area_profile:
+        #     appointments = appointments.filter(user_profile__area_profile=doctor_profile.area_profile)
+
+        # Optional: Filter by district if needed
+        # if doctor_profile.district:
+        #     appointments = appointments.filter(user_profile__district=doctor_profile.district)
+
+        context['appointments'] = appointments
         return context
 
 
@@ -189,10 +198,17 @@ class CancelAppointmentView(LoginRequiredMixin, View):
 
         # Mark the appointment as canceled
         appointment.appointment_status = 'C'
+
+        if appointment.time_slot:
+            appointment.time_slot.status = 'A'  # Assuming 'A' stands for Available
+            appointment.time_slot.save()
+
         appointment.save()
 
        
         appointment.delete()
+
+
 
         # Send email notification if user's email is available
         if appointment.user_profile.uemail:
@@ -334,7 +350,9 @@ class BaseAppointment(LoginRequiredMixin,TemplateView):
 
         # Get OPD type and time slot from POST request
         opd_type_id = request.POST.get('opd')  
-        time_slot_id = request.POST.get('time_slot') 
+        time_slot_id = request.POST.get('time_slot')
+        district_id = request.POST.get('district')  
+        area_profile_id = request.POST.get('area_profile')  
 
         if not user_profile:
             messages.error(request, "User profile not found.")
@@ -342,7 +360,9 @@ class BaseAppointment(LoginRequiredMixin,TemplateView):
 
         # Validate OPD type and time slot
         opd_type = OpdType.objects.filter(id=opd_type_id).first()
-        time_slot = TimeSlot.objects.filter(id=time_slot_id, status='A').first()  
+        time_slot = TimeSlot.objects.filter(id=time_slot_id, status='A').first() 
+        district = District.objects.filter(id=district_id).first()
+        area_profile = AreaProfile.objects.filter(id=area_profile_id).first() 
 
         if not opd_type:
             messages.error(request, "Invalid OPD type selected.")
@@ -356,6 +376,8 @@ class BaseAppointment(LoginRequiredMixin,TemplateView):
         appointment = Appointment.objects.create(
             user_profile=user_profile,
             opd_type=opd_type,
+            district = district,
+            area_profile=area_profile,  
             appointment_status='B',  # B for booked
             time_slot=time_slot
         )
@@ -664,9 +686,9 @@ class BaseRegionalLogin(LoginView):
         return super().form_invalid(form) 
 
     def get_success_url(self):
-        return reverse_lazy('home')
+        return reverse_lazy('rdashboard')
     
-
+ 
 
 # -----------------------------------------------------------------------------------------------------
 
@@ -719,9 +741,9 @@ class BaseDoctorLogin(LoginView):
         return super().form_invalid(form) 
 
     def get_success_url(self):
-        return reverse_lazy('home')
+        return reverse_lazy('ddashboard')
     
-
+ 
 # -----------------------------------------------------------------------------------------------------
 
 # user register
@@ -773,7 +795,7 @@ class BaseUserLogin(LoginView):
         return super().form_invalid(form) 
 
     def get_success_url(self):
-        return reverse_lazy('home')
+        return reverse_lazy('uprofile') 
     
 # -----------------------------------------------------------------------------------------------------
 

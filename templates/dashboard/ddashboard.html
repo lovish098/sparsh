@@ -11,7 +11,8 @@
 
     {% include 'base/nav.html' %}
 
-    <h1>Welcome, Dr. {{ doctor_profile.uname }}</h1>
+    <h1>Welcome, Dr. {{ doctor_profile.uname }} </h1>
+    <br><hr> 
 
     <h2>Appointments</h2>
 
@@ -21,6 +22,7 @@
                 <th>Appointment ID</th>
                 <th>Patient Name</th>
                 <th>Time Slot</th>
+                <th>Hospital</th>
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
@@ -31,6 +33,7 @@
                 <td>{{ appointment.appointment_id }}</td>
                 <td>{{ appointment.user_profile.uname }}</td>
                 <td>{{ appointment.time_slot }}</td>
+                <td>{{ appointment.area_profile.uname }}</td>
                 <td>{{ appointment.get_appointment_status_display }}</td>
                 <td>
                     <a href="{% url 'patient_profile' appointment.user_profile.id %}">View Profile</a>

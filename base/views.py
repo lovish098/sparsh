@@ -201,12 +201,21 @@ class CancelAppointmentView(LoginRequiredMixin, View):
 
         if appointment.time_slot:
             appointment.time_slot.status = 'A'  # Assuming 'A' stands for Available
-            appointment.time_slot.save()
+            appointment.time_slot.save()   
 
         appointment.save()
 
        
         appointment.delete()
+
+        # Construct the file path for the appointment PDF
+        pdf_filename = f"{appointment.appointment_id}_appointment.pdf"
+        print(pdf_filename)  
+        pdf_file_path =  os.path.join(settings.BASE_DIR, "media", 'appointment',  pdf_filename)
+
+        # Delete the PDF file if it exists
+        if os.path.exists(pdf_file_path):
+            os.remove(pdf_file_path) 
 
 
 

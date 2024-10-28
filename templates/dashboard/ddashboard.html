@@ -7,12 +7,29 @@
     <title>Doctor Dashboard</title>
     <link rel="stylesheet" href="{% static 'css/ddashboard.css' %}">
 </head>
+
+
 <body>
 
     {% include 'base/nav.html' %}
 
-    <h1>Welcome, Dr. {{ doctor_profile.uname }} </h1>
-    <br><hr> 
+    <div style="display: flex; justify-content: space-between;">
+        <h1>Welcome, Dr. {{ doctor_profile.uname }} </h1>
+        <form method="get" action="{% url 'download_appointments' %}">
+            {% csrf_token %}
+            <label for="format">Download Format:</label>
+            <select name="format" id="format" required>
+                <option value="" disabled selected>Select format</option>
+                <option value="csv">CSV</option>
+                <option value="xls">XLS</option>
+            </select>
+            <button type="submit">Download</button>
+        </form>
+
+    </div>
+
+   
+    <hr> 
 
     <h2>Appointments</h2>
 

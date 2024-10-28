@@ -31,6 +31,7 @@ urlpatterns = [
     path('ddashboard/',BaseDoctorDashboard.as_view(),name='ddashboard'),
     path('cancel_appointment/<int:pk>/', CancelAppointmentView.as_view(), name='cancel_appointment'),
     path('patient_profile/<int:pk>/', PatientProfileView.as_view(), name='patient_profile'),
+    path('download-appointments/', AppointmentDownloadView.as_view(), name='download_appointments'),
 
     #area user
     path('rlogin/',BaseRegionalLogin.as_view(),name='rlogin'),
@@ -42,6 +43,8 @@ urlpatterns = [
     path('rdashboard/',BaseAreaDashboard.as_view(),name='rdashboard'),
     path('rpatient_profile/<int:pk>/', RegionalPatientProfileView.as_view(), name='rpatient_profile'),
     path('rdoctor_profile/<int:pk>/', RegionalDoctorProfileView.as_view(), name='rdoctor_profile'),
+    path('download-area-user/', AreaUserDownloadView.as_view(), name='download-area-user'),
+
   
 
     #appointment

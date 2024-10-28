@@ -15,12 +15,14 @@ from django.http import JsonResponse
 from django.conf import settings
 from django.http import HttpResponse
 
-#for pdf usage
+#pdf / excel sheet / csv usage releated modules
 import os 
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
 from reportlab.pdfgen import canvas
+import pandas as pd
+import csv
 
 
 # import essential modules for auth
@@ -86,8 +88,69 @@ class BaseAreaDashboard(LoginRequiredMixin, TemplateView):
 
         return context
 
-   
 
+class AreaUserDownloadView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        # Get the area profile for the logged-in user
+        area_profile = AreaProfile.objects.filter(user=request.user).first()
+
+        # Get parameters from request
+        user_type = request.GET.get('user_type')
+        format = request.GET.get('format', 'csv')  # Default to CSV if not specified
+
+        # Filter based on the user_type parameter
+        if user_type == 'patient':
+            user_profiles = UserProfile.objects.filter(area_profile=area_profile)
+            doctor_profiles = []
+        elif user_type == 'doctor':
+            user_profiles = []
+            doctor_profiles = DoctorProfile.objects.filter(area_profile=area_profile)
+        else:
+            return HttpResponse('Invalid user type', status=400)
+
+        # Determine format and call appropriate download function
+        if format == 'csv':
+            return self.download_csv(user_profiles, doctor_profiles)
+        elif format == 'xls':
+            return self.download_xls(user_profiles, doctor_profiles)
+
+        return HttpResponse('Invalid format', status=400)
+
+    def download_csv(self, user_profiles, doctor_profiles):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="area_users.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow(['Type', 'User ID', 'Username', 'Email'])  # Header row
+
+        # Write user profiles
+        for user in user_profiles:
+            writer.writerow(['User', user.id, user.uname, user.uemail])
+
+        # Write doctor profiles
+        for doctor in doctor_profiles:
+            writer.writerow(['Doctor', doctor.id, doctor.uname, doctor.uemail])
+
+        return response
+
+    def download_xls(self, user_profiles, doctor_profiles):
+        # Prepare data for user profiles or doctor profiles only, based on user_type
+        data = {
+            'Type': ['User'] * len(user_profiles) + ['Doctor'] * len(doctor_profiles),
+            'User ID': [user.id for user in user_profiles] + [doctor.id for doctor in doctor_profiles],
+            'Username': [user.uname for user in user_profiles] + [doctor.uname for doctor in doctor_profiles],
+            'Email': [user.uemail for user in user_profiles] + [doctor.uemail for doctor in doctor_profiles],
+        }
+
+        df = pd.DataFrame(data)
+
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="area_users.xlsx"'
+
+        # Write the DataFrame to the response using openpyxl
+        df.to_excel(response, index=False)
+
+        return response
 
 # -----------------------------------------------------------------------------------------------------
 #update / add basic details of area
@@ -174,6 +237,62 @@ class BaseDoctorDashboard(LoginRequiredMixin, ListView):
         context['appointments'] = appointments
         return context
 
+
+
+class AppointmentDownloadView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        format = request.GET.get('format')
+        doctor_profile = DoctorProfile.objects.get(user=request.user)
+
+        # Fetch appointments based on doctor's OPD type
+        appointments = Appointment.objects.filter(opd_type=doctor_profile.opd_type).select_related('user_profile', 'time_slot')
+
+        if format == 'csv':
+            return self.download_csv(appointments)
+        elif format == 'xls':
+            return self.download_xls(appointments)
+
+        return HttpResponse('Invalid format', status=400)
+
+    def download_csv(self, appointments):
+        # Create a CSV response
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="appointments.csv"'
+        
+        writer = csv.writer(response)
+        writer.writerow(['Appointment ID', 'User ', 'Date', 'Status', 'Time Slot'])  # Header row
+        
+        for appointment in appointments:
+            writer.writerow([
+                appointment.appointment_id,
+                appointment.user_profile.uname,
+                appointment.created.strftime('%Y-%m-%d %H:%M:%S'),
+                appointment.appointment_status,
+                appointment.time_slot.time.strftime('%H:%M') if appointment.time_slot else 'N/A'
+            ])
+        return response
+
+    def download_xls(self, appointments):
+        # Create a DataFrame and then an Excel response
+        data = {
+            'Appointment ID': [appointment.appointment_id for appointment in appointments],
+            'User ': [appointment.user_profile.uname for appointment in appointments],
+            'Date': [appointment.created.strftime('%Y-%m-%d %H:%M:%S') for appointment in appointments],
+            'Status': [appointment.appointment_status for appointment in appointments],
+            'Time Slot': [appointment.time_slot.time.strftime('%H:%M') if appointment.time_slot else 'N/A' for appointment in appointments],
+        }
+        
+        df = pd.DataFrame(data)
+        response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+        response['Content-Disposition'] = 'attachment; filename="appointments.xlsx"'
+        
+        # Use pandas to write the DataFrame to the response
+        df.to_excel(response, index=False)
+        return response
+
+
+
+# ---------------------------------------------------------------------------------------
 
 class PatientProfileView(LoginRequiredMixin, DetailView):
     model = UserProfile

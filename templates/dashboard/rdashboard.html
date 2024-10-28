@@ -9,8 +9,32 @@
 <body>
 
     {% include 'base/nav.html' %}
-    <h1>Dashboard for {{ area_profile.uname }}</h1>
 
+    <div style="display: flex; justify-content: space-between;"> 
+
+        <h1>Dashboard for {{ area_profile.uname }}</h1>
+
+        
+        <form method="get" action="{% url 'download-area-user' %}">
+            <label for="user_type">Download Type:</label>
+            <select name="user_type" id="user_type" required>
+                <option value="" disabled selected>Select download type</option>
+                <option value="patient">Patient</option>
+                <option value="doctor">Doctor</option>
+            </select>
+
+            <label for="format">Format:</label>
+            <select name="format" id="format" required>
+                <option value="" disabled selected>Select format</option>
+                <option value="csv">CSV</option>
+                <option value="xls">XLS</option>
+            </select>
+
+            <button type="submit">Download</button>
+        </form>
+
+    </div>  
+   
     <hr><br>
     <h2>Patients</h2>
 

@@ -8,58 +8,50 @@
     <link rel="preload">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Arizonia&family=Crimson+Text&display=swap" rel="stylesheet">
+     <link rel="stylesheet" type="text/css" href="{% static 'css/urprofile.css' %}">
     <title>regional / area update profile</title>
 </head>
 <body>
 
  {% include 'base/nav.html' %}  
  
- <h1>Update / Add User Profile Details</h1>
- <form action="" method="post" enctype="multipart/form-data">
-     {% csrf_token %}
-     
-     {{ form.non_field_errors }}
- 
-     <div>
-         <label for="id_uname">Username:</label>
-         {{ form.uname.errors }}
-         {{ form.uname }}
-     </div>
- 
-     <div>
-         <label for="id_uaddress">Address:</label>
-         {{ form.uaddress.errors }}
-         {{ form.uaddress }}
-     </div>
- 
- 
-    <div>
-         <label for="id_image">Profile Image:</label>
-         {{ form.image.errors }}
-         {{ form.image }}
-    </div>
- 
 
-     <div>
-        <label for="id_area_profile">District:</label>
-        {{ form.district.errors }}
-        {{ form.district }}
-    </div>
+    <br>
+     <div class="containerf"> 
+        <div class="form-containerf">
+            <h2>Update / Add User Profile Details</h2>
+            <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
 
-    <div>
-        <label for="id_opd_types">OPD Types:</label>
-        {% for opd_type in opd_types %}
-            <div>
-                <input type="checkbox" name="opd_types" value="{{ opd_type.id }}"
-                   {% if opd_type in form.initial.opd_types %} checked {% endif %}>
-                {{ opd_type.name }}
-            </div>
-        {% endfor %}
+                {{ form.non_field_errors }}
+                <div class="form-groupf">
+                    <label>Username:</label>
+                    {{ form.uname.errors }}
+                    {{ form.uname }}
+                </div>
+               
+                <div class="form-groupf">
+                    <label>Address:</label>
+                    {{ form.uaddress.errors }}
+                    {{ form.uaddress }}
+                </div>
+                 
+                <div class="form-groupf">
+                    <label>District:</label>
+                    {{ form.district.errors }}
+                    {{ form.district }}
+                </div>
+                <div class="form-groupf">
+                    <label>Profile Image:</label>
+                    {{ form.image.errors }}
+                    {{ form.image }}
+                </div>
+                <button type="submit" class="submit-btnf">Submit</button>
+            </form><br><br>
+        </div>
     </div>
- 
-     <button type="submit">Submit</button>
- </form>
- 
+    <br>
+   
    
 
  {% include 'base/footer.html' %}
